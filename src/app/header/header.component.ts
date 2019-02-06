@@ -55,7 +55,7 @@ export class HeaderComponent implements OnInit {
 
   private showTransactionDialog() {
     const dialogRef = this.createTransactionDialog.open(PostDialogComponent, {
-      width: '600px',
+      width: '800px',
       autoFocus: true
     });
 

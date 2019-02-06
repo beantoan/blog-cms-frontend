@@ -8,7 +8,6 @@
     <span>{{title}}</span>
 
     <div fxShow="true" fxHide.lt-md>
-      <button *appShowAuthed="true" mat-button (click)="onCreatePostClicked()">Create post</button>
     </div>
 
     <span class="flex-space"></span>
@@ -18,9 +17,6 @@
       <button *appShowAuthed="true" mat-button (click)="onLogoutClicked()">Logout</button>
     </div>
 
-    <button *appShowAuthed="true" mat-button
-            fxShow="true" fxHide.gt-sm
-            (click)="onCreatePostClicked()">Create post</button>
   </mat-toolbar-row>
 </mat-toolbar>
 
