@@ -4,14 +4,13 @@ import {
   MAT_DIALOG_DATA,
   MatButtonModule,
   MatCardModule,
-  MatDatepickerModule,
   MatDialogModule,
   MatDialogRef,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
   MatProgressBarModule,
-  MatSnackBar
+  MatSnackBar, MatSnackBarModule
 } from '@angular/material';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {Logger} from '../core/services/logger';
@@ -77,7 +76,7 @@ export class PostDialogComponent implements OnInit {
 
             this.resetPostForm();
 
-            const message = this.post && this.post.id ? 'Sửa tiền vốn thành công' : 'Thêm tiền vốn thành thành công';
+            const message = this.post && this.post.id ? 'Edited post successfully' : 'Created new post successfully';
 
             this.snackBar.open(message, null, {
               duration: 3000
@@ -87,9 +86,9 @@ export class PostDialogComponent implements OnInit {
             Logger.info(PostDialogComponent.name, 'createNewPost', err);
 
             if (this.post && this.post.id) {
-              this.errorMessage = 'Gặp lỗi khi sửa tiền vốn. Hãy liên hệ với admin@pim.vn để được giúp đỡ.';
+              this.errorMessage = 'Error when editing the post';
             } else {
-              this.errorMessage = 'Gặp lỗi khi thêm tiền vốn. Hãy liên hệ với admin@pim.vn để được giúp đỡ.';
+              this.errorMessage = 'Error when creating a post';
             }
 
             this.isSubmitting = false;
@@ -101,7 +100,7 @@ export class PostDialogComponent implements OnInit {
     } else {
       this.setPostFormFieldsAsTouched();
 
-      this.errorMessage = 'Hãy nhập đầy đủ thông tin giao dịch';
+      this.errorMessage = 'Enter the required information';
 
       this.isSubmitting = false;
     }
@@ -173,9 +172,9 @@ export class PostDialogComponent implements OnInit {
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatDatepickerModule,
     MatDialogModule,
     MatProgressBarModule,
+    MatSnackBarModule,
     FlexLayoutModule
   ],
   exports: [PostDialogComponent],

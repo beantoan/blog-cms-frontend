@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-  {{post && post.id ? 'Sửa tiền vốn' : 'Thêm tiền vốn'}}
+  {{post && post.id ? 'Edit post' : 'Create new post'}}
 </h2>
 
 <mat-dialog-content class="mat-typography">
@@ -24,8 +24,9 @@
     <mat-form-field>
       <textarea matInput
                 type="content"
-                rows="3"
-                formControlName="note"
+                rows="5"
+                required
+                formControlName="content"
                 (click)="$event.target.select()"
                 autocomplete="off"
                 placeholder="Content"></textarea>
