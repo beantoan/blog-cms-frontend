@@ -7,6 +7,7 @@ import {Logger} from './logger';
 import {Observable} from 'rxjs';
 import {PageResponse} from '../models/page-response.model';
 import {Post} from '../models/post.model';
+import {ApiResponse} from '../models/api.response.model';
 
 
 @Injectable()
@@ -27,9 +28,15 @@ export class PostService {
     return this.apiService.get<PageResponse<Post>>(ApiEndpoints.POSTS, httpParams);
   }
 
-  create(post: {}): Observable<Post> {
+  create(post: {}): Observable<ApiResponse> {
     Logger.info(PostService.name, 'create', post);
 
-    return this.apiService.post<Post>(ApiEndpoints.POSTS, post);
+    return this.apiService.post<ApiResponse>(ApiEndpoints.POSTS, post);
+  }
+
+  update(post: { id: string }): Observable<ApiResponse> {
+    Logger.info(PostService.name, 'update', post);
+
+    return this.apiService.put<ApiResponse>(ApiEndpoints.POSTS + '/' + post.id, post);
   }
 }
