@@ -54,7 +54,7 @@ export class PostComponent implements OnInit {
 
   private showPostDialog(post: Post) {
     const dialogRef = this.createPostDialog.open(PostDialogComponent, {
-      width: '400px',
+      width: '800px',
       autoFocus: true,
       data: post
     });
