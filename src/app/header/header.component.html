@@ -1,0 +1,62 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <button mat-icon-button  *appShowAuthed="true"
+            (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <span>{{title}}</span>
+
+    <div fxShow="true" fxHide.lt-md>
+      <button *appShowAuthed="true" mat-button (click)="onCreatePostClicked()">Create post</button>
+    </div>
+
+    <span class="flex-space"></span>
+
+    <div fxShow="true" fxHide.lt-md>
+      <span *appShowAuthed="true">Hi {{currentUser.email}}</span>
+      <button *appShowAuthed="true" mat-button (click)="onLogoutClicked()">Logout</button>
+    </div>
+
+    <button *appShowAuthed="true" mat-button
+            fxShow="true" fxHide.gt-sm
+            (click)="onCreatePostClicked()">Create post</button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-sidenav-container fxFlexFill>
+  <mat-sidenav #sidenav>
+    <mat-nav-list *appShowAuthed="true">
+      <h3 mat-subheader>Hi {{currentUser.email}}</h3>
+      <mat-divider></mat-divider>
+
+      <mat-divider></mat-divider>
+
+      <a mat-list-item routerLink="." (click)="onLogoutClicked(); sidenav.toggle()">Logout</a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content fxFlexFill>
+
+    <router-outlet></router-outlet>
+
+    <mat-divider></mat-divider>
+
+    <br/>
+
+    <footer fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-around center">
+
+      <div>
+      </div>
+
+      <div>Version 1.0.0</div>
+
+      <div fxLayout="column" fxLayoutAlign="space-between center">
+        <div>©2018</div>
+      </div>
+    </footer>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+

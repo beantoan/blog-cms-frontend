@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>
+  {{post && post.id ? 'Sửa tiền vốn' : 'Thêm tiền vốn'}}
+</h2>
+
+<mat-dialog-content class="mat-typography">
+  <mat-progress-bar mode="indeterminate" *ngIf="isSubmitting"></mat-progress-bar>
+
+  <form [formGroup]="postForm" fxLayout="column" fxLayoutAlign="space-between stretch">
+    <div class="aui-message aui-message-warning" *ngIf="errorMessage">
+      <p>{{errorMessage}}</p>
+    </div>
+    <br/>
+
+    <mat-form-field>
+      <input matInput
+             type="text"
+             formControlName="title"
+             (click)="$event.target.select()"
+             required
+             autocomplete="off"
+             placeholder="Title" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <textarea matInput
+                type="content"
+                rows="3"
+                formControlName="note"
+                (click)="$event.target.select()"
+                autocomplete="off"
+                placeholder="Content"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCloseDialogClicked()">Close</button>
+  <button mat-raised-button color="primary" (click)="onSavePostClicked()">Save post</button>
+</mat-dialog-actions>

@@ -1,0 +1,58 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  display: none;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.mat-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.fl-lft {
+  float: left;
+}
+
+.fl-rght {
+  float: right;
+}
+
+.padding-0 {
+  padding: 0 !important;
+}
+
+.flex-space {
+  flex: 1 1 auto;
+}
+
+.mat-table {
+  width: 100%;
+}
+
+.app-progress-bar {
+  position: sticky !important;
+  padding-top: 1px;
+  top: 0 !important;
+  z-index: 9999 !important;
+}
+
+.mat-column-buyQuantity {
+  padding-left: 0 !important;
+}
+
+.page-header {
+  margin-bottom: 20px;
+}
+
+@media(max-width: 1000px) {
+  .responsive-table {
+    overflow-x: auto !important;
+  }
+
+  .responsive-table table {
+    min-width: 1000px;
+  }
+}
