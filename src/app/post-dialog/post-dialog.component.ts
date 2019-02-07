@@ -10,14 +10,15 @@ import {
   MatIconModule,
   MatInputModule,
   MatProgressBarModule,
-  MatSnackBar, MatSnackBarModule
+  MatSnackBar,
+  MatSnackBarModule
 } from '@angular/material';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {Logger} from '../core/services/logger';
-import {Post} from '../core/models/post.model';
 import {PostService} from '../core/services/post.service';
 import {merge} from 'rxjs';
 import {CoreModule} from '../core/core.module';
+import {AppEventEmitter} from '../core/services/app-event-emitter.service';
 
 
 @Component({
@@ -38,8 +39,9 @@ export class PostDialogComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private postService: PostService,
-    @Inject(MAT_DIALOG_DATA) public post: Post,
+    @Inject(MAT_DIALOG_DATA) public data = {post: null, onlyView: false},
     private dialogRef: MatDialogRef<PostDialogComponent>,
+    private appEventEmitter: AppEventEmitter
   ) { }
 
   ngOnInit() {
@@ -50,8 +52,8 @@ export class PostDialogComponent implements OnInit {
   private getPostFormData() {
     const data = this.postForm.value;
 
-    if (this.post) {
-      data.id = this.post.id;
+    if (this.data.post) {
+      data.id = this.data.post.id;
     }
 
     return data;
@@ -68,28 +70,25 @@ export class PostDialogComponent implements OnInit {
     if (this.postForm.valid) {
       const postData = this.getPostFormData();
 
-      this.postService.create(postData)
-        .subscribe(
+      const observable = this.data.post ? this.postService.update(postData) : this.postService.create(postData);
+
+      observable.subscribe(
           data => {
 
             this.savedPostData = postData;
 
             this.resetPostForm();
 
-            const message = this.post && this.post.id ? 'Edited post successfully' : 'Created new post successfully';
-
-            this.snackBar.open(message, null, {
+            this.snackBar.open(data.msg, null, {
               duration: 3000
             });
+
+            this.appEventEmitter.onPostDialogClosed.next(true);
           },
           err => {
             Logger.info(PostDialogComponent.name, 'createNewPost', err);
 
-            if (this.post && this.post.id) {
-              this.errorMessage = 'Error when editing the post';
-            } else {
-              this.errorMessage = 'Error when creating a post';
-            }
+            this.errorMessage = err.msg;
 
             this.isSubmitting = false;
           },
@@ -122,14 +121,16 @@ export class PostDialogComponent implements OnInit {
     let titleVal = '';
     let contentVal = '';
 
-    if (this.post) {
-      titleVal = this.post.title;
-      contentVal = this.post.content;
+    const isDisabled = this.data.onlyView;
+
+    if (this.data.post) {
+      titleVal = this.data.post.title;
+      contentVal = this.data.post.content;
     }
 
     this.postForm = new FormGroup({
-      title: new FormControl(titleVal, [Validators.required]),
-      content: new FormControl(contentVal, [Validators.required])
+      title: new FormControl({value: titleVal, disabled: isDisabled}, [Validators.required]),
+      content: new FormControl({value: contentVal, disabled: isDisabled}, [Validators.required])
     });
   }
 
@@ -161,6 +162,14 @@ export class PostDialogComponent implements OnInit {
     Logger.info(PostDialogComponent.name, 'onCloseDialogClicked', this.savedPostData);
 
     this.dialogRef.close(this.savedPostData);
+  }
+
+  getTitle() {
+    if (this.data.onlyView) {
+      return 'View post';
+    } else {
+      return (this.data.post && this.data.post.id) ? 'Edit post' : 'Create new post';
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-  {{post && post.id ? 'Edit post' : 'Create new post'}}
+  {{getTitle()}}
 </h2>
 
 <mat-dialog-content class="mat-typography">
@@ -26,6 +26,7 @@
                 type="content"
                 rows="5"
                 required
+                [disabled]="data.onlyView"
                 formControlName="content"
                 (click)="$event.target.select()"
                 autocomplete="off"
@@ -36,5 +37,5 @@
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCloseDialogClicked()">Close</button>
-  <button mat-raised-button color="primary" (click)="onSavePostClicked()">Save post</button>
+  <button mat-raised-button color="primary" *ngIf="!data.onlyView" (click)="onSavePostClicked()">Save post</button>
 </mat-dialog-actions>
