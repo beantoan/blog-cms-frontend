@@ -34,9 +34,15 @@ export class PostService {
     return this.apiService.post<ApiResponse>(ApiEndpoints.POSTS, post);
   }
 
-  update(post: { id: string }): Observable<ApiResponse> {
+  update(post): Observable<ApiResponse> {
     Logger.info(PostService.name, 'update', post);
 
     return this.apiService.put<ApiResponse>(ApiEndpoints.POSTS + '/' + post.id, post);
+  }
+
+  delete(post): Observable<ApiResponse> {
+    Logger.info(PostService.name, 'delete', post);
+
+    return this.apiService.delete<ApiResponse>(ApiEndpoints.POSTS + '/' + post.id);
   }
 }
