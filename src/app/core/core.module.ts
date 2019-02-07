@@ -13,6 +13,7 @@ import {PostService} from './services/post.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserService} from './services/user.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {TruncatePipe} from './services/truncate.pipe';
 
 @NgModule({
   imports: [
@@ -35,9 +36,12 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    TruncatePipe
   ],
-  declarations: []
+  declarations: [
+    TruncatePipe
+  ]
 })
 export class CoreModule {
 }

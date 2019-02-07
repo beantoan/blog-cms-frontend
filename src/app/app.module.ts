@@ -9,6 +9,7 @@ import {PostModule} from './post/post.component';
 import {FooterModule} from './footer/footer.component';
 import {HeaderModule} from './header/header.component';
 import {LoginModule} from './login/login.component';
+import {DeletePostSheetModule} from './delete-post-sheet/delete-post-sheet.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import {LoginModule} from './login/login.component';
     HeaderModule,
     PostDialogModule,
     PostModule,
-    LoginModule
+    LoginModule,
+    DeletePostSheetModule
   ],
   providers: [],
   bootstrap: [AppComponent]
