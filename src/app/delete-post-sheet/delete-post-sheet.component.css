@@ -1,0 +1,7 @@
+.bottom-sheet-title {
+  padding-right: 10px;
+}
+
+.bottom-sheet-buttons > button:nth-child(1) {
+  margin-right: 10px;
+}

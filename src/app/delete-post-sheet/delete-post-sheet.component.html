@@ -1,0 +1,11 @@
+
+<div  fxLayout="row" fxLayoutAlign="space-between center">
+  <h3 class="bottom-sheet-title">
+    Do you really want to delete post "{{post.title | truncate: 50 : true}}"?
+  </h3>
+
+  <div class="bottom-sheet-buttons" fxLayout="row" fxLayoutAlign="space-between center">
+    <button mat-raised-button (click)="closeSheet($event)">No</button>
+    <button mat-raised-button color="warn" (click)="deletePost()">Yes</button>
+  </div>
+</div>
