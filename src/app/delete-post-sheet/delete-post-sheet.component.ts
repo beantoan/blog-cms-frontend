@@ -21,7 +21,6 @@ import {AppEventEmitter} from '../core/services/app-event-emitter.service';
 })
 export class DeletePostSheetComponent implements OnInit {
 
-  errorMessage = null;
   isSubmitting = false;
 
   constructor(
@@ -41,7 +40,6 @@ export class DeletePostSheetComponent implements OnInit {
   }
 
   deletePost() {
-    this.errorMessage = null;
     this.isSubmitting = true;
 
     this.postService.delete(this.post)
@@ -54,9 +52,11 @@ export class DeletePostSheetComponent implements OnInit {
         err => {
           Logger.info(DeletePostSheetComponent.name, 'deletePost', err);
 
-          this.errorMessage = err.msg;
-
           this.isSubmitting = false;
+
+          this.snackBar.open(err.msg, null, {
+            duration: 3000
+          });
         },
         () => {
           this.isSubmitting = false;
