@@ -1,5 +1,6 @@
-import {Component, NgModule, OnInit} from '@angular/core';
+import {Component, NgModule, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {
+  MatBottomSheet,
   MatButtonModule,
   MatCardModule,
   MatDialog,
@@ -7,6 +8,7 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatPaginator,
   MatPaginatorModule,
   MatProgressBarModule,
   MatTableModule
@@ -18,32 +20,68 @@ import {PostService} from '../core/services/post.service';
 import {PageResponse} from '../core/models/page-response.model';
 import {Post} from '../core/models/post.model';
 import {CoreModule} from '../core/core.module';
+import {DeletePostSheetComponent} from '../delete-post-sheet/delete-post-sheet.component';
+import {AppEventEmitter} from '../core/services/app-event-emitter.service';
+import {merge} from 'rxjs';
 
 @Component({
   selector: 'app-post',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.css']
 })
-export class PostComponent implements OnInit {
+export class PostComponent implements OnInit, OnDestroy {
 
   postsPageResponse: PageResponse<Post> = new PageResponse<Post>();
 
-  postsPageSize = 30;
+  postsPageSize = 15;
   isLoadingPosts = false;
 
+  tableColumns = ['title', 'content', 'createdAt', 'actions'];
+
+  @ViewChild('postsPaginator') postsPaginator: MatPaginator;
+
   constructor(
-    public createPostDialog: MatDialog,
-    private postService: PostService
+    private createPostDialog: MatDialog,
+    private deletePostSheet: MatBottomSheet,
+    private postService: PostService,
+    private appEventEmitter: AppEventEmitter
   ) { }
 
   ngOnInit() {
-    this.loadPosts();
+    this.loadPosts(1);
+
+    this.subscribeEvents();
   }
 
-  private loadPosts() {
+  ngOnDestroy() {
+    this.unsubscribeEvents();
+  }
+
+  private unsubscribeEvents() {
+    this.postsPaginator.page.unsubscribe();
+    this.appEventEmitter.onPostDialogClosed.unsubscribe();
+    this.appEventEmitter.onPostDeleted.unsubscribe();
+  }
+
+  private subscribeEvents() {
+    this.postsPaginator.page.subscribe(event => {
+      this.loadPosts(this.postsPaginator.pageIndex + 1);
+    });
+
+    merge(
+      this.appEventEmitter.onPostDialogClosed,
+      this.appEventEmitter.onPostDeleted
+    ).subscribe(data => {
+      if (data) {
+        this.loadPosts(1);
+      }
+    });
+  }
+
+  private loadPosts(page: number) {
     this.isLoadingPosts = true;
 
-    this.postService.index(0, this.postsPageSize)
+    this.postService.index(page, this.postsPageSize)
       .subscribe(data => {
         this.postsPageResponse = data;
         this.isLoadingPosts = false;
@@ -52,28 +90,33 @@ export class PostComponent implements OnInit {
       });
   }
 
-  private showPostDialog(post: Post) {
-    const dialogRef = this.createPostDialog.open(PostDialogComponent, {
+  private showPostDialog(post: Post, onlyView: boolean) {
+    this.createPostDialog.open(PostDialogComponent, {
       width: '800px',
       autoFocus: true,
-      data: post
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      Logger.info(PostComponent.name, 'showPostDialog', 'dialog is closed', result);
-
-      if (result) {
-        this.loadPosts();
+      data: {
+        post,
+        onlyView
       }
     });
   }
 
   onAddPostClicked() {
-    this.showPostDialog(null);
+    this.showPostDialog(null, false);
   }
 
   onEditPostClicked(post: Post) {
-    this.showPostDialog(post);
+    this.showPostDialog(post, false);
+  }
+
+  onViewPostClicked(post: Post) {
+    this.showPostDialog(post, true);
+  }
+
+  onDeletePostClicked(post: Post) {
+    this.deletePostSheet.open(DeletePostSheetComponent, {
+      data: post
+    });
   }
 }
 
