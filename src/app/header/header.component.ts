@@ -17,10 +17,7 @@ import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {ShowAuthedDirective} from '../core/services/show-authed.directive';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {Logger} from '../core/services/logger';
-import {AppEventEmitter} from '../core/services/app-event-emitter.service';
 import {environment} from '../../environments/environment';
-import {PostDialogComponent} from '../post-dialog/post-dialog.component';
 
 @Component({
   selector: 'app-header',
@@ -35,9 +32,7 @@ export class HeaderComponent implements OnInit {
   @Input() title: string;
 
   constructor(
-    public createTransactionDialog: MatDialog,
     private userService: UserService,
-    private appEventEmitter: AppEventEmitter
   ) {
   }
 
@@ -51,23 +46,6 @@ export class HeaderComponent implements OnInit {
         this.currentUser = userData;
       }
     );
-  }
-
-  private showTransactionDialog() {
-    const dialogRef = this.createTransactionDialog.open(PostDialogComponent, {
-      width: '800px',
-      autoFocus: true
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      Logger.info(HeaderComponent.name, 'showTransactionDialog', 'dialog is closed', result);
-
-      this.appEventEmitter.onPostDialogClosed.emit(result);
-    });
-  }
-
-  onCreatePostClicked() {
-    this.showTransactionDialog();
   }
 
   onLogoutClicked() {
