@@ -28,6 +28,12 @@ export class PostService {
     return this.apiService.get<PageResponse<Post>>(ApiEndpoints.POSTS, httpParams);
   }
 
+  get(post): Observable<Post> {
+    Logger.info(PostService.name, 'get', post);
+
+    return this.apiService.get<Post>(ApiEndpoints.POSTS + '/' + post.id);
+  }
+
   create(post: {}): Observable<ApiResponse> {
     Logger.info(PostService.name, 'create', post);
 

@@ -10,7 +10,7 @@ import {
   MatInputModule,
   MatPaginator,
   MatPaginatorModule,
-  MatProgressBarModule,
+  MatProgressBarModule, MatSnackBar, MatSnackBarModule,
   MatTableModule
 } from '@angular/material';
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -41,6 +41,7 @@ export class PostComponent implements OnInit, OnDestroy {
   @ViewChild('postsPaginator') postsPaginator: MatPaginator;
 
   constructor(
+    private snackBar: MatSnackBar,
     private createPostDialog: MatDialog,
     private deletePostSheet: MatBottomSheet,
     private postService: PostService,
@@ -110,7 +111,25 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   onViewPostClicked(post: Post) {
-    this.showPostDialog(post, true);
+    this.isLoadingPosts = true;
+
+    this.postService.get(post).subscribe(
+      data => {
+        this.showPostDialog(data, true);
+      },
+      error => {
+        Logger.info(PostDialogComponent.name, 'onViewPostClicked', error);
+
+        this.snackBar.open(error.msg, null, {
+          duration: 3000
+        });
+
+        this.isLoadingPosts = false;
+      },
+      () => {
+        this.isLoadingPosts = false;
+      }
+    );
   }
 
   onDeletePostClicked(post: Post) {
@@ -123,6 +142,7 @@ export class PostComponent implements OnInit, OnDestroy {
 @NgModule({
   imports: [
     CoreModule,
+    MatSnackBarModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
